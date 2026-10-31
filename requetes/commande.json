@@ -1,0 +1,8 @@
+{
+    "clientId": "C-001",
+    "email": "amina@exemple.ma",
+    "lignes": [
+      { "reference": "CLAV-01", "quantite": 1 },
+      { "reference": "SOUR-02", "quantite": 2 }
+    ]
+}

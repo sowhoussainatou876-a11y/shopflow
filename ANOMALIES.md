@@ -27,3 +27,10 @@
 - **Test révélateur** : `ServiceCommandeTest > C6 : une panne de l'envoi d'e-mail n'annule pas la commande` (erreur : `IllegalStateException: Serveur SMTP injoignable` remontée au client).
 - **Cause** : dans `ServiceCommande.passerCommande()`, l'appel à `notifications.envoyerConfirmation(...)` n'était pas protégé. Son exception traversait le service alors que le paiement et l'enregistrement avaient déjà réussi, et le client risquait de repasser commande et de payer deux fois.
 - **Correctif** : entourer l'envoi d'un `try / catch (RuntimeException)` qui journalise un avertissement (`System.Logger`) sans annuler la commande.
+
+## Anomalie 5 : survente du stock sous accès concurrents (mise à jour perdue)
+
+- **Scénario** : 20 clients commandent en même temps le même écran, dont il ne reste que 8 exemplaires. Le site en vend 20 au lieu de 8.
+- **Test révélateur** : `StockJpaAdapterTest > 20 clients simultanés ne peuvent pas acheter plus que les 8 écrans en stock` (nombre d'écrans vendus : 20 obtenus, 8 attendus).
+- **Cause** : mise à jour perdue (lost update). `StockJpaAdapter.reserver()` lit le stock, vérifie, puis écrit une valeur calculée en Java. Entre la lecture et l'écriture, d'autres transactions lisent la même valeur. `@Transactional` ne protège pas à l'isolation READ COMMITTED de PostgreSQL, et la contrainte `check (stock >= 0)` ne détecte rien car le stock final n'est jamais négatif. Bug invisible au TP2, car le stock y était un mock.
+- **Correctif** : remplacer lecture puis écriture par une seule requête atomique `update produit set stock = stock - :q where reference = :r and stock >= :q` (méthodes `decrementerStock` et `incrementerStock` du dépôt). La base verrouille la ligne pendant l'instruction, et le nombre de lignes modifiées indique le succès ou la rupture.

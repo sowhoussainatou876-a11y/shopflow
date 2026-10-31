@@ -1,0 +1,7 @@
+{
+    "clientId": "C-002",
+    "email": "karim@exemple.ma",
+    "lignes": [
+      { "reference": "PORT-06", "quantite": 2 }
+    ]
+}
