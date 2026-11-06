@@ -14,7 +14,8 @@ import jakarta.validation.constraints.NotEmpty;
 public record DemandeCommande(
         @NotBlank String clientId,
         @NotBlank @Email String email,
-        @NotEmpty List<@Valid Ligne> lignes) {
+        @NotEmpty List<@Valid Ligne> lignes,
+        String codePromo) {
 
     public record Ligne(@NotBlank String reference, @Min(1) int quantite) {
     }

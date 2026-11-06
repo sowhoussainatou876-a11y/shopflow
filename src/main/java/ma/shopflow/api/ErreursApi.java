@@ -9,6 +9,7 @@ import ma.shopflow.catalogue.ProduitInconnuException;
 import ma.shopflow.commande.PaiementRefuseException;
 import ma.shopflow.commande.RuptureDeStockException;
 import ma.shopflow.panier.QuantiteMaximaleDepasseeException;
+import ma.shopflow.promo.CodePromoInvalideException;
 
 /**
  * Traduit les exceptions métier en réponses HTTP au format Problem Details (RFC
@@ -34,6 +35,11 @@ public class ErreursApi {
 
     @ExceptionHandler(QuantiteMaximaleDepasseeException.class)
     ProblemDetail quantiteMaximale(QuantiteMaximaleDepasseeException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_CONTENT, e.getMessage());
+    }
+
+    @ExceptionHandler(CodePromoInvalideException.class)
+    ProblemDetail codePromoInvalide(CodePromoInvalideException e) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_CONTENT, e.getMessage());
     }
 }

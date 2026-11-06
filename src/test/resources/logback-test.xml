@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Journal des tests : même format court que l'application, sans le bavardage du démarrage des tests -->
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <property name="CONSOLE_LOG_PATTERN" value="%d{HH:mm:ss} %-5level %-28.28logger{0} : %msg%n"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    <logger name="org.springframework.test.context" level="WARN"/>
+    <logger name="org.springframework.boot.test.context" level="WARN"/>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

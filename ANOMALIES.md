@@ -34,3 +34,10 @@
 - **Test révélateur** : `StockJpaAdapterTest > 20 clients simultanés ne peuvent pas acheter plus que les 8 écrans en stock` (nombre d'écrans vendus : 20 obtenus, 8 attendus).
 - **Cause** : mise à jour perdue (lost update). `StockJpaAdapter.reserver()` lit le stock, vérifie, puis écrit une valeur calculée en Java. Entre la lecture et l'écriture, d'autres transactions lisent la même valeur. `@Transactional` ne protège pas à l'isolation READ COMMITTED de PostgreSQL, et la contrainte `check (stock >= 0)` ne détecte rien car le stock final n'est jamais négatif. Bug invisible au TP2, car le stock y était un mock.
 - **Correctif** : remplacer lecture puis écriture par une seule requête atomique `update produit set stock = stock - :q where reference = :r and stock >= :q` (méthodes `decrementerStock` et `incrementerStock` du dépôt). La base verrouille la ligne pendant l'instruction, et le nombre de lignes modifiées indique le succès ou la rupture.
+
+## Anomalie 6 : un code promo cesse de fonctionner le jour même de son expiration
+
+- **Règle concernée** : « un code est valable jusqu'à sa date d'expiration incluse » (fonctionnalité Codes promo, règle de Nadia).
+- **Test révélateur** : scénario `Codes promo - Le code BLACKFRIDAY est valable jusqu'au 30 novembre inclus`, exemple du 30/11/2026 (code accepté attendu, 422 obtenu).
+- **Cause** : dans `ServiceCodesPromo.valider()`, la condition `!aujourdhui.isBefore(expireLe)` refuse aussi le jour même de l'expiration. Erreur de borne, comme l'anomalie 1 du TP1 : le code BLACKFRIDAY aurait cessé de fonctionner le 30 novembre, jour le plus fort des ventes.
+- **Correctif** : remplacer la condition par `aujourdhui.isAfter(expireLe)`. Un code n'est expiré que strictement après sa date d'expiration. Le plan du scénario (veille, jour même, lendemain) reste en place comme test de non-régression.

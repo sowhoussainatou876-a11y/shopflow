@@ -17,6 +17,7 @@ import ma.shopflow.commande.Client;
 import ma.shopflow.commande.Commande;
 import ma.shopflow.commande.ServiceCommande;
 import ma.shopflow.panier.Panier;
+import ma.shopflow.promo.ServiceCodesPromo;
 
 @RestController
 @RequestMapping("/api/commandes")
@@ -24,10 +25,13 @@ public class CommandeController {
 
     private final ServiceCommande service;
     private final ProduitJpaRepository produits;
+    private final ServiceCodesPromo codesPromo;
 
-    public CommandeController(ServiceCommande service, ProduitJpaRepository produits) {
+    public CommandeController(ServiceCommande service, ProduitJpaRepository produits,
+            ServiceCodesPromo codesPromo) {
         this.service = service;
         this.produits = produits;
+        this.codesPromo = codesPromo;
     }
 
     @PostMapping
@@ -37,6 +41,9 @@ public class CommandeController {
             ProduitEntity produit = produits.findById(ligne.reference())
                     .orElseThrow(() -> new ProduitInconnuException(ligne.reference()));
             panier.ajouter(produit.versProduit(), ligne.quantite());
+        }
+        if (demande.codePromo() != null) {
+            panier.appliquerCodePromo(codesPromo.valider(demande.codePromo()));
         }
         Commande commande = service.passerCommande(new Client(demande.clientId(), demande.email()), panier);
         return ResponseEntity.created(URI.create("/api/commandes/" + commande.id()))
