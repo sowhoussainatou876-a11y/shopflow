@@ -27,7 +27,7 @@ import ma.shopflow.commande.RuptureDeStockException;
 @Import({ TestcontainersConfiguration.class, StockJpaAdapter.class })
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @DisplayName("Stock PostgreSQL")
-class StockJpaAdapterTest {
+class StockJpaAdapterIT {
 
     @Autowired
     StockJpaAdapter stock;

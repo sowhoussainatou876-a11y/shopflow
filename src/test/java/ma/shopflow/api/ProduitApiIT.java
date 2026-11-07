@@ -26,7 +26,7 @@ import ma.shopflow.TestcontainersConfiguration;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Import(TestcontainersConfiguration.class)
 @DisplayName("API REST (REST Assured)")
-class ProduitApiTest {
+class ProduitApiIT {
 
     @LocalServerPort
     int port;

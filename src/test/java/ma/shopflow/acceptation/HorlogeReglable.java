@@ -9,7 +9,7 @@ import java.time.ZoneId;
  * Une horloge que les scénarios règlent à la date de leur choix (« nous sommes
  * le 30/11/2026 »).
  */
-public class HorlogeDeTest extends Clock {
+public class HorlogeReglable extends Clock {
 
     private static final ZoneId CASABLANCA = ZoneId.of("Africa/Casablanca");
     private Instant maintenant = Instant.now();

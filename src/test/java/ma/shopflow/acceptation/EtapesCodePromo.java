@@ -21,9 +21,9 @@ public class EtapesCodePromo {
 
     private final ContexteScenario contexte;
     private final JdbcTemplate jdbc;
-    private final HorlogeDeTest horloge;
+    private final HorlogeReglable horloge;
 
-    public EtapesCodePromo(ContexteScenario contexte, JdbcTemplate jdbc, HorlogeDeTest horloge) {
+    public EtapesCodePromo(ContexteScenario contexte, JdbcTemplate jdbc, HorlogeReglable horloge) {
         this.contexte = contexte;
         this.jdbc = jdbc;
         this.horloge = horloge;

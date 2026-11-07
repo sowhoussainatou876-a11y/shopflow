@@ -25,8 +25,8 @@ public class CucumberSpringConfiguration {
 
         @Bean
         @Primary
-        HorlogeDeTest horlogeDeTest() {
-            return new HorlogeDeTest();
+        HorlogeReglable horlogeDeTest() {
+            return new HorlogeReglable();
         }
     }
 }

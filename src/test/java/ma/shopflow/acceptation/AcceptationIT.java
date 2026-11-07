@@ -19,5 +19,5 @@ import org.junit.platform.suite.api.Suite;
 @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "ma.shopflow.acceptation")
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty, html:target/cucumber/rapport.html, json:target/cucumber/rapport.json")
 @ConfigurationParameter(key = JUNIT_PLATFORM_NAMING_STRATEGY_PROPERTY_NAME, value = "long")
-public class AcceptationTest {
+public class AcceptationIT {
 }

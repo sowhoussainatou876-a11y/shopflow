@@ -17,7 +17,7 @@ import ma.shopflow.TestcontainersConfiguration;
 @DataJpaTest
 @Import(TestcontainersConfiguration.class)
 @DisplayName("Catalogue PostgreSQL")
-class ProduitJpaRepositoryTest {
+class ProduitJpaRepositoryIT {
 
     @Autowired
     ProduitJpaRepository produits;

@@ -1,0 +1,57 @@
+# Pipeline d'intégration continue de ShopFlow : à chaque push et à chaque pull request
+name: CI ShopFlow
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  tests-unitaires:
+    name: Tests unitaires
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v7
+
+      - name: Installer Java 21
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Compiler et lancer les tests unitaires
+        run: mvn -B test
+
+  tests-integration:
+    name: Tests d'intégration et couverture
+    needs: tests-unitaires
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v7
+
+      - name: Installer Java 21
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Tests d'intégration, d'acceptation et seuil de couverture
+        run: mvn -B verify
+
+      - name: Publier le rapport de couverture
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: couverture-jacoco
+          path: target/site/jacoco/
+
+      - name: Publier le rapport Cucumber
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: rapport-cucumber
+          path: target/cucumber/
